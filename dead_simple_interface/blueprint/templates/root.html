@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Accessions</h1>
+<ul>
+{% for x in acc_list %}
+    <li><a href=./{{x}}>{{x}}</li>
+{% endfor %}
+</ul>
+{% if next_link is not none %}
+<a href={{next_link}}>next</a>
+{% endif %}
+{% endblock %}

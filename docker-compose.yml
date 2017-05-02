@@ -1,0 +1,13 @@
+version: '2'
+services:
+    dead_simple_interface:
+        build:
+            context: .
+            args:
+                PORT: "8915"
+                WORKERS: "4"
+                TIMEOUT: "30"
+        ports: 
+            - "8915:8915"
+        environment:
+            - DEAD_SIMPLE_INTERFACE_CONFIG=/code/config.py

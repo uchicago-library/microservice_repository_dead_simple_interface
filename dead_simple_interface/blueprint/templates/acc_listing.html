@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Accession: {{acc_id}}</h1>
+<ul>
+{% for x in obj_list %}
+    <li>{{x}}</li>
+    <ul>
+        <li>Original Name</li>
+        <li>File Link</li>
+        <li>Qremis Link</li>
+    </ul>
+{% endfor %}
+</ul>
+{% if next_link is not none %}
+<a href={{next_link}}>next</a>
+{% endif %}
+{% endblock %}
