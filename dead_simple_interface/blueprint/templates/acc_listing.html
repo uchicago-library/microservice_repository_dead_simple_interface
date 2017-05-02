@@ -3,11 +3,11 @@
 <h1>Accession: {{acc_id}}</h1>
 <ul>
 {% for x in obj_list %}
-    <li>{{x}}</li>
+    <li>{{x.identifier}}</li>
     <ul>
-        <li>Original Name</li>
-        <li>File Link</li>
-        <li>Qremis Link</li>
+        <li>{{x.originalName}}</li>
+        <li><a href={{archstor_url}}{{x.identifier}}>File Link</a></li>
+        <li><a href={{qremis_api_url}}object_list/{{x.identifier}}>Qremis Link</a></li>
     </ul>
 {% endfor %}
 </ul>

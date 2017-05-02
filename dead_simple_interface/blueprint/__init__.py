@@ -1,44 +1,60 @@
 import logging
 import requests
-from json import dumps, loads
 
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, render_template, request
 
 
 BLUEPRINT = Blueprint('dead_simple_interface', __name__,
                       template_folder='templates')
 
 
-BLUEPRINT.config = {
-}
+BLUEPRINT.config = {}
 
 log = logging.getLogger(__name__)
 
 
 @BLUEPRINT.route("/", methods=['GET'])
-def root(cursor="0"):
-    resp = requests.get(BLUEPRINT.config['ACC_IDNEST_URL']+"?cursor={}".format(cursor))
+def root():
+    cursor = request.values.get('cursor', "0")
+    resp = requests.get(BLUEPRINT.config['INTERNAL_ACC_IDNEST_URL'],
+                        params={'limit': 200, 'cursor': cursor})
     resp.raise_for_status()
     resp_json = resp.json()
     acc_list = [x['identifier'] for x in resp_json['Containers']]
     next_link = None
     next_cursor = resp_json['pagination']['next_cursor']
     if next_cursor:
-        next_link = BLUEPRINT.config['ACC_IDNEST_URL']+"?cursor={}".format(next_cursor)
+        next_link = ".?cursor={}".format(next_cursor)
     return render_template("root.html", acc_list=acc_list, next_link=next_link)
 
 
 @BLUEPRINT.route("/<string:acc_id>")
 def acc_listing(acc_id, cursor="0"):
-    resp = requests.get(BLUEPRINT.config['ACC_IDNEST_URL']+"/{}".format(acc_id))
+    def get_originalName(id):
+        try:
+            r = requests.get(BLUEPRINT.config['INTERNAL_QREMIS_API_URL']+"object_list/"+id)
+            r.raise_for_status()
+            rj = r.json()
+            hex_originalName = rj['originalName']
+            bytes_originalName = bytearray.fromhex(hex_originalName)
+            return str(bytes_originalName.decode("utf-8"))
+        except Exception as e:
+            return str(e)
+
+    cursor = request.values.get('cursor', "0")
+    resp = requests.get(BLUEPRINT.config['INTERNAL_ACC_IDNEST_URL']+"/{}".format(acc_id),
+                        params={'limit': 200, 'cursor': cursor})
     resp.raise_for_status()
     resp_json = resp.json()
-    obj_list = [x['identifier'] for x in resp_json['Members']]
+    obj_list = [{'identifier': x['identifier'], 'originalName': get_originalName(x['identifier'])}
+                for x in resp_json['Members']]
     next_link = None
     next_cursor = resp_json['pagination']['next_cursor']
     if next_cursor:
-        next_link = BLUEPRINT.config['ACC_IDNEST_URL']+"/{}".format(acc_id)+"?cursor={}".format(next_cursor)
-    return render_template("acc_listing.html", acc_id=acc_id, obj_list=obj_list, next_link=next_link)
+        next_link = "./{}".format(acc_id)+"?cursor={}".format(next_cursor)
+    return render_template("acc_listing.html", acc_id=acc_id, obj_list=obj_list, next_link=next_link,
+                           archstor_url=BLUEPRINT.config['EXTERNAL_ARCHSTOR_URL'],
+                           qremis_api_url=BLUEPRINT.config['EXTERNAL_QREMIS_API_URL'])
 
 
 @BLUEPRINT.record
