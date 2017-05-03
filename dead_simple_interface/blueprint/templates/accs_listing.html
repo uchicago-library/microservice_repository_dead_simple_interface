@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Accessions</h1>
+<ul class="list-group">
+{% for x in acc_list %}
+    <li class="list-group-item"><a href=./{{x}}>{{x}}</li>
+{% endfor %}
+</ul>
+{% if next_link is not none %}
+<div class="btn-group btn-group-justified">
+    <a href="{{next_link}}" class="btn btn-primary">Next</a>
+</div>
+{% endif %}
+{% endblock %}

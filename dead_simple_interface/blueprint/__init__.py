@@ -15,6 +15,11 @@ log = logging.getLogger(__name__)
 
 @BLUEPRINT.route("/", methods=['GET'])
 def root():
+    return render_template("root.html")
+
+
+@BLUEPRINT.route("/accessions/", methods=['GET'])
+def accs_listing():
     cursor = request.values.get('cursor', "0")
     resp = requests.get(BLUEPRINT.config['INTERNAL_ACC_IDNEST_URL'],
                         params={'limit': 200, 'cursor': cursor})
@@ -25,10 +30,10 @@ def root():
     next_cursor = resp_json['pagination']['next_cursor']
     if next_cursor:
         next_link = ".?cursor={}".format(next_cursor)
-    return render_template("root.html", acc_list=acc_list, next_link=next_link)
+    return render_template("accs_listing.html", acc_list=acc_list, next_link=next_link)
 
 
-@BLUEPRINT.route("/<string:acc_id>")
+@BLUEPRINT.route("/accessions/<string:acc_id>")
 def acc_listing(acc_id, cursor="0"):
     def get_originalName(id):
         try:
