@@ -17,7 +17,7 @@
             <td>{{x.originalName}}</td>
             <td>
                 <ul>
-                    <li><a href={{archstor_url}}{{x.identifier}}>File</a></li>
+                    <li><a href={{archstor_url}}{{x.identifier}}{% if x.download_name is not none %} download={{x.download_name}}{% endif %}>File</a></li>
                     <li><a href={{qremis_api_url}}object_list/{{x.identifier}}>Metadata</a></li>
                     <li>External Link</li>
                 </ul>

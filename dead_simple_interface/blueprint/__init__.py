@@ -1,5 +1,6 @@
 import logging
 import requests
+import pathlib
 
 from flask import Blueprint, render_template, request
 
@@ -46,12 +47,21 @@ def acc_listing(acc_id, cursor="0"):
         except Exception as e:
             return str(e)
 
+    def get_downloadName(origName):
+        if origName is None:
+            return None
+        n = pathlib.Path(origName).name
+        if n == '':
+            return None
+        return n
+
     cursor = request.values.get('cursor', "0")
     resp = requests.get(BLUEPRINT.config['INTERNAL_ACC_IDNEST_URL']+"/{}".format(acc_id),
                         params={'limit': 200, 'cursor': cursor})
     resp.raise_for_status()
     resp_json = resp.json()
-    obj_list = [{'identifier': x['identifier'], 'originalName': get_originalName(x['identifier'])}
+    obj_list = [{'identifier': x['identifier'], 'originalName': get_originalName(x['identifier']),
+                 'download_name': get_downloadName(get_originalName(x['identifier']))}
                 for x in resp_json['Members']]
     next_link = None
     next_cursor = resp_json['pagination']['next_cursor']
