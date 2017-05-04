@@ -19,27 +19,28 @@ def root():
     return render_template("root.html")
 
 
-@BLUEPRINT.route("/collectionrecs/", methods=['GET'])
+@BLUEPRINT.route("/records/", methods=['GET'])
 def list_collectionrecs():
-    pass
+    coll_list = []
+    return render_template("collrec_listing.html", coll_list=coll_list)
 
 
-@BLUEPRINT.route("/collectionrecs/mint_collectionrec", methods=['GET', 'POST'])
+@BLUEPRINT.route("/records/mint_collectionrec", methods=['GET', 'POST'])
 def mint_collectionrec():
     pass
 
 
-@BLUEPRINT.route("/collectionrecs/<string:c_id>/", methods=['GET'])
+@BLUEPRINT.route("/records/<string:c_id>/", methods=['GET'])
 def view_collectionrec():
     pass
 
 
-@BLUEPRINT.route("/collectionrecs/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
+@BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
 def mint_accessionrec():
     pass
 
 
-@BLUEPRINT.route("/collectionrecs/<string:c_id>/<string:a_id>", methods=['GET'])
+@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>", methods=['GET'])
 def view_accessionrec():
     pass
 
