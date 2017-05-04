@@ -19,6 +19,31 @@ def root():
     return render_template("root.html")
 
 
+@BLUEPRINT.route("/collectionrecs/", methods=['GET'])
+def list_collectionrecs():
+    pass
+
+
+@BLUEPRINT.route("/collectionrecs/mint_collectionrec", methods=['GET', 'POST'])
+def mint_collectionrec():
+    pass
+
+
+@BLUEPRINT.route("/collectionrecs/<string:c_id>/", methods=['GET'])
+def view_collectionrec():
+    pass
+
+
+@BLUEPRINT.route("/collectionrecs/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
+def mint_accessionrec():
+    pass
+
+
+@BLUEPRINT.route("/collectionrecs/<string:c_id>/<string:a_id>", methods=['GET'])
+def view_accessionrec():
+    pass
+
+
 @BLUEPRINT.route("/accessions/", methods=['GET'])
 def accs_listing():
     cursor = request.values.get('cursor', "0")

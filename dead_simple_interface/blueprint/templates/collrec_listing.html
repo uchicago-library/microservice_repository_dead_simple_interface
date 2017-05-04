@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{acc_id}}</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Identifier</th>
+            <th>Original Name</th>
+            <th>Links</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for x in obj_list %}
+        <tr>
+            <td>{{x.identifier}}</td>
+            <td>{{x.originalName}}</td>
+            <td>
+                <ul>
+                    <li><a href={{archstor_url}}{{x.identifier}}{% if x.download_name is not none %} download={{x.download_name}}{% endif %}>File</a></li>
+                    <li><a href={{qremis_api_url}}object_list/{{x.identifier}}>Metadata</a></li>
+                    <li>External Link</li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if next_link is not none %}
+<div class="btn-group btn-group-justified">
+  <a href="{{next_link}}" class="btn btn-primary">Next</a>
+</div>
+{% endif %}
+{% endblock %}
