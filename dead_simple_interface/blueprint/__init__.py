@@ -2,7 +2,7 @@ import logging
 import requests
 import pathlib
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, make_response
 
 
 BLUEPRINT = Blueprint('dead_simple_interface', __name__,
@@ -21,28 +21,50 @@ def root():
 
 @BLUEPRINT.route("/records/", methods=['GET'])
 def list_collectionrecs():
-    coll_list = []
+    coll_list = [
+        {'name': "Test Collection",
+         'identifier': '123'}
+    ]
     return render_template("collrec_listing.html", coll_list=coll_list)
 
 
 @BLUEPRINT.route("/records/mint_collectionrec", methods=['GET', 'POST'])
 def mint_collectionrec():
-    pass
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("mint_collrec.html")
 
 
 @BLUEPRINT.route("/records/<string:c_id>/", methods=['GET'])
-def view_collectionrec():
-    pass
+def view_collectionrec(c_id):
+    name = 'Test Collection'
+    identifier = c_id
+    accrec_list = [
+        'abc',
+        'def'
+    ]
+    coll_note = "This is a collection note"
+    return render_template("collrec_view.html", coll_name=name, coll_identifier=identifier,
+                           accrec_list=accrec_list, coll_note=coll_note)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
-def mint_accessionrec():
-    pass
+def mint_accessionrec(c_id):
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("mint_accrec.html", c_id=c_id)
 
 
-@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>", methods=['GET'])
-def view_accessionrec():
-    pass
+@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/", methods=['GET'])
+def view_accessionrec(c_id, a_id):
+    note = "This is an accession note"
+    linked_acc = "linkedAccessionIdentifier"
+    return render_template("accrec_view.html", accrec_id=a_id, accrec_note=note, linked_acc=linked_acc)
+
 
 
 @BLUEPRINT.route("/accessions/", methods=['GET'])

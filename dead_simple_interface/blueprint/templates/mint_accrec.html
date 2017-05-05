@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New Accession Record</h1>
+<br/>
+<form method="post">
+    <div class="form-group">
+        <label for="note">Note: </label>
+        <textarea class="form-control" rows="5" id="note" name='note'></textarea>
+        <br />
+        <label for="related_acc">Related Accession Identifier: </label>
+        <input type="text" class="form-control" id="related_acc" name='related_acc'>
+    </div>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Collection Records <a href="./mint_collectionrc" class="btn btn-primary">New Collection Record</a></h1>
+<h1>Collection Records <a href="./mint_collectionrec" class="btn btn-primary">New Collection Record</a></h1>
 <br/>
 <table class="table table-striped">
     <thead>
@@ -15,7 +15,7 @@
         <tr>
             <td>{{x.name}}</td>
             <td>{{x.identifier}}</td>
-            <td>View</td>
+            <td><a href="./{{x.identifier}}/">View</a></td>
         </tr>
         {% endfor %}
     </tbody>

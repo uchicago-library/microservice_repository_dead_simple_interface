@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{coll_name}}</h1>
+<h2>{{coll_identifier}}</h2>
+<blockquote class="blockquote">
+    <p class="mb-0">{{coll_note}}</p>
+</blockquote>    
+<h1>Accession Records <a href="./mint_accessionrec" class="btn btn-primary">New Accession Record</a></h1>
+<br/>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Identifier</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for x in accrec_list %}
+        <tr>
+            <td>{{x}}</td>
+            <td><a href="./{{x}}/">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
