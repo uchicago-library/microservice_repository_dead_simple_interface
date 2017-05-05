@@ -52,12 +52,22 @@ def view_collectionrec(c_id):
 
 @BLUEPRINT.route("/records/<string:c_id>/editNote", methods=['GET', 'POST'])
 def edit_collectionrecNote(c_id):
-    pass
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("edit_textarea.html", field_name="Collection Record Note",
+                               curr_value="test_curr_value")
 
 
 @BLUEPRINT.route("/records/<string:c_id>/editName", methods=['GET', 'POST'])
 def edit_collectionrecName(c_id):
-    pass
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("edit_text.html", field_name="Collection Name",
+                               curr_value="test_curr_value")
 
 
 @BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
@@ -78,11 +88,26 @@ def view_accessionrec(c_id, a_id):
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editNote", methods=['GET', 'POST'])
 def edit_accessionrecNote(c_id, a_id):
-    pass
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("edit_textarea.html", field_name="Accession Record Note",
+                               curr_value="test_curr_value")
 
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editLinkedAcc", methods=['GET', 'POST'])
 def edit_accessionrecLinkedAcc(c_id, a_id):
+    if request.method == 'POST':
+        return make_response(str(request.values))
+
+    if request.method == 'GET':
+        return render_template("edit_text.html", field_name="Linked Accession Identifier",
+                               curr_value="test_curr_value")
+
+
+@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editAssociatedIdentifiers", methods=['GET', 'POST'])
+def edit_accessionrecAssociatedIds(c_id, a_id):
     pass
 
 
