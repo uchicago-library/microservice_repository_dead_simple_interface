@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>New Accession Record</h1>
+<h2>{{a_id}}</h2>
 <br/>
 <form method="post">
     <div class="form-group">
@@ -9,6 +10,7 @@
         <br />
         <label for="related_acc">Related Accession Identifier: </label>
         <input type="text" class="form-control" id="related_acc" name='related_acc'>
+        <input type="hidden" name="accrec_id" value="{{a_id}}" id="accrec_id">
     </div>
     <input type="submit" class="btn btn-primary" value="Submit">
 </form>

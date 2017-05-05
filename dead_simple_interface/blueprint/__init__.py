@@ -36,9 +36,9 @@ def mint_collectionrec():
         cid = uuid4().hex
         r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}'.format(cid),
                          data={'name': request.values['name'],
-                                 'note': request.values['note']})
+                               'note': request.values['note']})
         r.raise_for_status()
-        return redirect("/records/{}".format(cid))
+        return redirect("/records/{}/".format(cid))
 
     if request.method == 'GET':
         return render_template("mint_collrec.html")
@@ -94,37 +94,58 @@ def edit_collectionrecName(c_id):
 @BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
 def mint_accessionrec(c_id):
     if request.method == 'POST':
-        return make_response(str(request.values))
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}'.format(request.values['accrec_id']),
+                          data={'associated_cid': c_id, 'note': request.values.get('note', ""),
+                                'linked_acc': request.values.get("related_acc")})
+        r.raise_for_status()
+        return redirect("/records/{}/".format(c_id))
 
     if request.method == 'GET':
-        return render_template("mint_accrec.html", c_id=c_id)
+        return render_template("mint_accrec.html", c_id=c_id, a_id=uuid4().hex)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/", methods=['GET'])
 def view_accessionrec(c_id, a_id):
-    note = "This is an accession note"
-    linked_acc = "linkedAccessionIdentifier"
+    r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}'.format(a_id))
+    r.raise_for_status()
+    rj = r.json()
+    note = rj['note']
+    linked_acc = rj['linked_acc']
     return render_template("accrec_view.html", accrec_id=a_id, accrec_note=note, linked_acc=linked_acc)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editNote", methods=['GET', 'POST'])
 def edit_accessionrecNote(c_id, a_id):
     if request.method == 'POST':
-        return make_response(str(request.values))
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}/editNote'.format(a_id),
+                         data={'note': request.values['field']})
+        r.raise_for_status()
+        return redirect("/records/{}/{}/".format(c_id, a_id))
 
     if request.method == 'GET':
+        r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}'.format(a_id))
+        r.raise_for_status()
+        rj = r.json()
+        curr_value = rj['note']
         return render_template("edit_textarea.html", field_name="Accession Record Note",
-                               curr_value="test_curr_value")
+                               curr_value=curr_value)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editLinkedAcc", methods=['GET', 'POST'])
 def edit_accessionrecLinkedAcc(c_id, a_id):
     if request.method == 'POST':
-        return make_response(str(request.values))
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}/linkedId'.format(a_id),
+                         data={'linked_acc': request.values['field']})
+        r.raise_for_status()
+        return redirect("/records/{}/{}/".format(c_id, a_id))
 
     if request.method == 'GET':
+        r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'accessions/{}'.format(a_id))
+        r.raise_for_status()
+        rj = r.json()
+        curr_value = rj['linked_acc']
         return render_template("edit_text.html", field_name="Linked Accession Identifier",
-                               curr_value="test_curr_value")
+                               curr_value=curr_value)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editAssociatedIdentifiers", methods=['GET', 'POST'])
@@ -158,7 +179,7 @@ def acc_listing(acc_id, cursor="0"):
             bytes_originalName = bytearray.fromhex(hex_originalName)
             return str(bytes_originalName.decode("utf-8"))
         except Exception as e:
-            return str(e)
+            return "Error!"
 
     def get_downloadName(origName):
         if origName is None:
