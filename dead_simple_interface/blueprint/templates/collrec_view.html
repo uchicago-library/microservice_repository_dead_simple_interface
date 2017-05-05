@@ -12,14 +12,16 @@
     <thead>
         <tr>
             <th>Identifier</th>
+            <th>External Ids</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         {% for x in accrec_list %}
         <tr>
-            <td>{{x}}</td>
-            <td><a href="./{{x}}/">View</a></td>
+            <td>{{x.identifier}}</td>
+            <td>{{x.external_ids}}</td>
+            <td><a href="./{{x.identifier}}/">View</a></td>
         </tr>
         {% endfor %}
     </tbody>
