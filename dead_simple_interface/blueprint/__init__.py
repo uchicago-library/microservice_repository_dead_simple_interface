@@ -1,8 +1,10 @@
 import logging
 import requests
 import pathlib
+from uuid import uuid4
 
-from flask import Blueprint, render_template, request, make_response
+from flask import Blueprint, render_template, request, make_response, \
+    redirect
 
 
 BLUEPRINT = Blueprint('dead_simple_interface', __name__,
@@ -21,17 +23,22 @@ def root():
 
 @BLUEPRINT.route("/records/", methods=['GET'])
 def list_collectionrecs():
-    coll_list = [
-        {'name': "Test Collection",
-         'identifier': '123'}
-    ]
+    r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections')
+    r.raise_for_status()
+    rj = r.json()
+    coll_list = rj['Collection_Records']
     return render_template("collrec_listing.html", coll_list=coll_list)
 
 
 @BLUEPRINT.route("/records/mint_collectionrec", methods=['GET', 'POST'])
 def mint_collectionrec():
     if request.method == 'POST':
-        return make_response(str(request.values))
+        cid = uuid4().hex
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}'.format(cid),
+                         data={'name': request.values['name'],
+                                 'note': request.values['note']})
+        r.raise_for_status()
+        return redirect("/records/{}".format(cid))
 
     if request.method == 'GET':
         return render_template("mint_collrec.html")
@@ -39,13 +46,13 @@ def mint_collectionrec():
 
 @BLUEPRINT.route("/records/<string:c_id>/", methods=['GET'])
 def view_collectionrec(c_id):
-    name = 'Test Collection'
     identifier = c_id
-    accrec_list = [
-        'abc',
-        'def'
-    ]
-    coll_note = "This is a collection note"
+    r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}'.format(c_id))
+    r.raise_for_status()
+    rj = r.json()
+    name = rj['name']
+    accrec_list = rj['accs']
+    coll_note = rj['note']
     return render_template("collrec_view.html", coll_name=name, coll_identifier=identifier,
                            accrec_list=accrec_list, coll_note=coll_note)
 
@@ -53,21 +60,35 @@ def view_collectionrec(c_id):
 @BLUEPRINT.route("/records/<string:c_id>/editNote", methods=['GET', 'POST'])
 def edit_collectionrecNote(c_id):
     if request.method == 'POST':
-        return make_response(str(request.values))
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}/editNote'.format(c_id),
+                         data={'note': request.values['field']})
+        r.raise_for_status()
+        return redirect("/records/{}/".format(c_id))
 
     if request.method == 'GET':
+        r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}'.format(c_id))
+        r.raise_for_status()
+        rj = r.json()
+        curr_value = rj['note']
         return render_template("edit_textarea.html", field_name="Collection Record Note",
-                               curr_value="test_curr_value")
+                               curr_value=curr_value)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/editName", methods=['GET', 'POST'])
 def edit_collectionrecName(c_id):
     if request.method == 'POST':
-        return make_response(str(request.values))
+        r = requests.put(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}/editName'.format(c_id),
+                         data={'name': request.values['field']})
+        r.raise_for_status()
+        return redirect("/records/{}/".format(c_id))
 
     if request.method == 'GET':
+        r = requests.get(BLUEPRINT.config['INTERNAL_RECS_API_URL']+'collections/{}'.format(c_id))
+        r.raise_for_status()
+        rj = r.json()
+        curr_value = rj['name']
         return render_template("edit_text.html", field_name="Collection Name",
-                               curr_value="test_curr_value")
+                               curr_value=curr_value)
 
 
 @BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
