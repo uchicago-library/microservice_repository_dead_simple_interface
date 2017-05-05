@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{coll_name}}</h1>
+<h1>{{coll_name}} <a href="./editName" class="btn btn-xs">Edit</a></h1>
 <h2>{{coll_identifier}}</h2>
+<h2>Collection Record Note <a href="./editNote" class="btn btn-xs">Edit</a></h2>
 <blockquote class="blockquote">
     <p class="mb-0">{{coll_note}}</p>
 </blockquote>    

@@ -50,6 +50,16 @@ def view_collectionrec(c_id):
                            accrec_list=accrec_list, coll_note=coll_note)
 
 
+@BLUEPRINT.route("/records/<string:c_id>/editNote", methods=['GET', 'POST'])
+def edit_collectionrecNote(c_id):
+    pass
+
+
+@BLUEPRINT.route("/records/<string:c_id>/editName", methods=['GET', 'POST'])
+def edit_collectionrecName(c_id):
+    pass
+
+
 @BLUEPRINT.route("/records/<string:c_id>/mint_accessionrec", methods=['GET', 'POST'])
 def mint_accessionrec(c_id):
     if request.method == 'POST':
@@ -65,6 +75,15 @@ def view_accessionrec(c_id, a_id):
     linked_acc = "linkedAccessionIdentifier"
     return render_template("accrec_view.html", accrec_id=a_id, accrec_note=note, linked_acc=linked_acc)
 
+
+@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editNote", methods=['GET', 'POST'])
+def edit_accessionrecNote(c_id, a_id):
+    pass
+
+
+@BLUEPRINT.route("/records/<string:c_id>/<string:a_id>/editLinkedAcc", methods=['GET', 'POST'])
+def edit_accessionrecLinkedAcc(c_id, a_id):
+    pass
 
 
 @BLUEPRINT.route("/accessions/", methods=['GET'])
