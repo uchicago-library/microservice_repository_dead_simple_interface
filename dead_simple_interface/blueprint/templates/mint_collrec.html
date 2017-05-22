@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New Collection Record</h1>
+<br/>
+<form method="post">
+    <div class="form-group">
+        <label for="name">Collection Name: </label>
+        <input type="text" class="form-control" id="name" name='name'>
+        <br/>
+        <label for="note">Note: </label>
+        <textarea class="form-control" rows="5" id="note" name='note'></textarea>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+{% endblock %}

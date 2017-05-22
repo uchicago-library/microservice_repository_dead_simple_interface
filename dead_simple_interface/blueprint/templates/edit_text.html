@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Editing {{field_name}}</h1>
+<br/>
+<form method="post">
+    <div class="form-group">
+        <label for="field">{{field_name}}: </label>
+        <input type="text" class="form-control" id="field" name='field' value="{{curr_value}}">
+    </div>
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+{% endblock %}

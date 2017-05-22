@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{accrec_id}}</h1>
+<h2>Accession Record Note <a href="./editNote" class="btn btn-xs">Edit</a></h2>
+<blockquote class="blockquote">
+    <p class="mb-0">{{accrec_note}}</p>
+</blockquote>    
+<br/>
+<h2>Associated External Ids<a href="./addAssociatedIdentifier" class="btn btn-xs">Add</a></h2>
+<table class="table table-striped">
+{% for x in external_ids %}
+<tr>
+    <td>{{x}}</td>
+</tr>
+{% endfor %}
+</table>
+<h2>Linked Accession <a href="./editLinkedAcc" class="btn btn-xs">Change</a></h2>
+<a href="/accessions/{{linked_acc}}">{{linked_acc}}</a>
+{% endblock %}
