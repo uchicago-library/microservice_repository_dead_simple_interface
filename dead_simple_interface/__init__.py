@@ -1,14 +1,16 @@
 from flask import Flask
 from .blueprint import BLUEPRINT
+from flask_env import MetaFlaskEnv
+
+
+class Configuration(metaclass=MetaFlaskEnv):
+    ENV_PREFIX = "DEAD_SIMPLE_INTERFACE_"
+    DEBUG = False
+    DEFER_CONFIG = False
+
 
 app = Flask(__name__)
 
-app.config.from_envvar("DEAD_SIMPLE_INTERFACE_CONFIG", silent=True)
-
-# Hardcode any config values into
-# app.config here, if you want to.
-# Above the from_envvar call they'll
-# get clobbered, below it they'll
-# clobber things from the file
+app.config.from_object(Configuration)
 
 app.register_blueprint(BLUEPRINT)

@@ -4,7 +4,7 @@ import pathlib
 from uuid import uuid4
 
 from flask import Blueprint, render_template, request, \
-    redirect
+    redirect, jsonify
 
 
 BLUEPRINT = Blueprint('dead_simple_interface', __name__,
@@ -225,6 +225,9 @@ def acc_listing(acc_id, cursor="0"):
 def handle_configs(setup_state):
     app = setup_state.app
     BLUEPRINT.config.update(app.config)
+
+    if BLUEPRINT.config.get("DEFER_CONFIG"):
+        return
 
     if BLUEPRINT.config.get("VERBOSITY"):
         logging.basicConfig(level=BLUEPRINT.config['VERBOSITY'])
