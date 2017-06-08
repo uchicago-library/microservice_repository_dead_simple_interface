@@ -7,7 +7,13 @@ services:
                 PORT: "8915"
                 WORKERS: "4"
                 TIMEOUT: "30"
+                SECRET_KEY: "provideThisAtBuildTime"
         ports: 
             - "8915:8915"
         environment:
-            - DEAD_SIMPLE_INTERFACE_CONFIG=/code/config.py
+            - DEAD_SIMPLE_INTERFACE_INTERNAL_ACC_IDNEST_URL=http://acc_idnest:8083/
+            - DEAD_SIMPLE_INTERFACE_INTERNAL_RECS_API_URL=http://records_api:8085/
+            - DEAD_SIMPLE_INTERFACE_EXTERNAL_ARCHSTOR_URL=http://localhost:80/archstor/v0/
+            - DEAD_SIMPLE_INTERFACE_EXTERNAL_QREMIS_API_URL=http://localhost:80/qremis_api/v0/
+            - DEAD_SIMPLE_INTERFACE_INTERNAL_QREMIS_API_URL=http://qremis_api:8082/
+            - DEAD_SIMPLE_INTERFACE_VERBOSITY=WARN
